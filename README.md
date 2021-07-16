@@ -1,2 +1,2 @@
 # Simple-Shell-Scripts
-Shell Scripts Examples
+Shell Scripts Examples for Beginners
