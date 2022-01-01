@@ -5,6 +5,8 @@ COUNT=1
 while [ $COUNT -le 10 ]
 do
   echo "Count is $COUNT"
+  touch $COUNT.txt
+
   ((COUNT++))
 done
 
