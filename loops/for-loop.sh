@@ -1,7 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-for file in ./*.sh
+NAMES=$@
+
+for i in $NAMES
 do
-	ls -lh "${file}" >> looping-`date +%Y-%m-%d`.log
+  echo "Hello, $i"
 done
-exit
+
+echo "Foor Loop terminated, last value is $i"
