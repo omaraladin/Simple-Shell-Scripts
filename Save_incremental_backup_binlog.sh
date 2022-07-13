@@ -40,7 +40,7 @@ zip $backup_folder/binlogs_$MY_DATE.zip $binlogs_fullPath
 echo $binlog_Last | sshpass -p $MY_VAR xargs -I % mysql -p -E --execute='PURGE BINARY LOGS TO "%";' mysql -p
 
 #send archived logs to destination server
-scp -i /root/.ssh/id_test -P 2812 $backup_folder/binlogs_$MY_DATE.zip root@api.dev.swoshstest.com:/var/backups/dest_mysql/
+scp -i /root/.ssh/id_test -P 2812 $backup_folder/binlogs_$MY_DATE.zip root@db2.example.com:/var/backups/dest_mysql/
 
 #Leave the last 4 archives just for safety
 cd /var/backups/mysql/ && ls -1tr | head -n -4 | xargs -d '\n' rm -f --
