@@ -7,6 +7,7 @@
 #a Function to catch errors
 function exceptError()
 {
+# This function will send the failed line number and then force the script to exit with error code
  ERR_LINE=$1
  curl -s -X POST https://api.telegram.org/bot$TEL_TOKEN/sendMessage -d chat_id=$TEL_CHATID -d parse_mode="html" -d text='''<b>Replication Script Failed on line:</b> ❌ '$ERR_LINE'
 <b>Failure Exact Time is:</b> ⏰ '$(date +%d-%m-%Y_%H-%M)'
