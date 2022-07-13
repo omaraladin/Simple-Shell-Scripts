@@ -4,13 +4,23 @@
 #And to https://blog.sqlbak.com/incremental-mysql-server-backup-via-binary-log
 #Please Visit before using script
 
+#a Function to catch errors
+function exceptError()
+{
+ ERR_LINE=$1
+ curl -s -X POST https://api.telegram.org/bot$TEL_TOKEN/sendMessage -d chat_id=$TEL_CHATID -d parse_mode="html" -d text='''<b>Replication Script Failed on line:</b> ❌ '$ERR_LINE'
+<b>Failure Exact Time is:</b> ⏰ '$(date +%d-%m-%Y_%H-%M)'
+kindly, troubleshoot the issue
+'''
+exit 1
+}
 
 #Telegram Credentials
 TEL_TOKEN="00000000:AAAAAAAAAAAAAAAAAAAAAAAAAAA"
 TEL_CHATID="-000000"
 
 MY_DATE=$(date +%d-%m-%Y_%H-%M)
-MY_VAR=$(cat /opt/test/value.txt | openssl enc -d -a -A -aes-256-cbc -md sha256 -k '4ncrypti0n_Str1ng')
+MY_VAR=$(cat /opt/test/value.txt | openssl enc -d -a -A -aes-256-cbc -md sha256 -k '4ncrypti0n_Str1ng') || exceptError $LINENO
 
 #Send Telegram Start Notification
 curl -s -X POST https://api.telegram.org/bot$TEL_TOKEN/sendMessage -d chat_id=$TEL_CHATID -d parse_mode="html" -d text='''<b>Replication Script started on:</b> ⏰ '$MY_DATE'
@@ -22,10 +32,10 @@ binlogs_path=/var/log/mysql/
 backup_folder=/var/backups/mysql/
 
 #start writing to new binary log file
-sshpass -p $MY_VAR mysql -p -E --execute='FLUSH BINARY LOGS;' mysql -p
+sshpass -p $MY_VAR mysql -p -E --execute='FLUSH BINARY LOGS;' mysql -p || exceptError $LINENO
 
 #get list of binary log files
-binlogs=$(sshpass -p $MY_VAR mysql -p -E --execute='SHOW BINARY LOGS;' mysql -p | grep Log_name | sed -e 's/Log_name://g' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+binlogs=$(sshpass -p $MY_VAR mysql -p -E --execute='SHOW BINARY LOGS;' mysql -p | grep Log_name | sed -e 's/Log_name://g' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//') || exceptError $LINENO
 #get binlogs without last one
 binlogs_without_Last=`echo "${binlogs}" | head -n -1`
 #get the last active binary log file (which you do not have to copy)
@@ -34,13 +44,13 @@ binlog_Last=`echo "${binlogs}" | tail -n -1`
 binlogs_fullPath=`echo "${binlogs_without_Last}" | xargs -I % echo $binlogs_path%`
 
 #compress binary logs into archive
-zip $backup_folder/binlogs_$MY_DATE.zip $binlogs_fullPath
+zip $backup_folder/binlogs_$MY_DATE.zip $binlogs_fullPath || exceptError $LINENO
 
 #delete saved binary log files
-echo $binlog_Last | sshpass -p $MY_VAR xargs -I % mysql -p -E --execute='PURGE BINARY LOGS TO "%";' mysql -p
+echo $binlog_Last | sshpass -p $MY_VAR xargs -I % mysql -p -E --execute='PURGE BINARY LOGS TO "%";' mysql -p || exceptError $LINENO
 
 #send archived logs to destination server
-scp -i /root/.ssh/id_test -P 2812 $backup_folder/binlogs_$MY_DATE.zip root@db2.example.com:/var/backups/dest_mysql/
+scp -i /root/.ssh/id_test -P 2812 $backup_folder/binlogs_$MY_DATE.zip root@db2.example.com:/var/backups/dest_mysql/ || exceptError $LINENO
 
 #Leave the last 4 archives just for safety
 cd /var/backups/mysql/ && ls -1tr | head -n -4 | xargs -d '\n' rm -f --
