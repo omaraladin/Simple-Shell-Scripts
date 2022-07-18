@@ -48,7 +48,7 @@ esac
 TEL_TOKEN="0000000000:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 TEL_CHATID="-000000000"
 
-MY_VAR=$(cat /opt/test/value.txt | openssl enc -d -a -A -aes-256-cbc -md sha256 -k '&Pp5sooZS&[~"oH~A#]^') || sendTeleMessage "fail" $LINENO $(date "+%c")
+MY_VAR=$(cat /opt/test/value.txt | openssl enc -d -a -A -aes-256-cbc -md sha256 -k '4ncrEpti0N_Str1ng') || sendTeleMessage "fail" $LINENO $(date "+%c")
 
 #Remember to avail this directory and log file first
 logFile=/var/log/restore_script/restore_script.log
