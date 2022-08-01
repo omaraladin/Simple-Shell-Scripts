@@ -1,6 +1,7 @@
 #!/bin/bash
 
 #Thanks to https://www.howtogeek.com/734838/how-to-use-encrypted-passwords-in-bash-scripts/
+# and https://gist.github.com/corvax19/4275922
 #And to https://blog.sqlbak.com/incremental-mysql-server-backup-via-binary-log
 #Please Visit before using script
 
