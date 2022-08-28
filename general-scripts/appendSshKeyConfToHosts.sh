@@ -17,7 +17,7 @@ do
 
     #If above conditions are not met then this is the line which starts with a host ALIAS
     #so append the string to the line, see stringAppend variable
-	else
+	elif [[ $REPLY == [a-z]* || $REPLY == [A-Z]* ]]
 #		echo $REPLY		
 #		echo -e "Modified to:"
 		nodeName=$(echo $REPLY | awk '{ print $1 }')
