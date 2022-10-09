@@ -9,11 +9,11 @@ read -p 'Please choose a number: ' choice
 
 case $choice in
 	1)
-		for i in $(cat /tmp/inactiveHosts.txt); do sed -e "/$i/ s/^#*/#/" -i /home/ansible/vpn_ops/inventory_updated.txt; done
+		for i in $(cat /tmp/inactiveHosts.txt); do sed -e "/$i/ s/^#*/#/" -i /home/ansible/inventory.txt; done
 		echo -e "\nDone\n"
 		;;			
 	2)
-		for i in $(cat /tmp/inactiveHosts.txt); do sed -e "/$i/d" -i /home/ansible/vpn_ops/inventory_updated.txt; done
+		for i in $(cat /tmp/inactiveHosts.txt); do sed -e "/$i/d" -i /home/ansible/inventory.txt; done
 		echo -e "\nDone\n"
 		;;
 	*)

@@ -20,8 +20,8 @@ do
 	elif [[ $REPLY == [a-z]* || $REPLY == [A-Z]* ]]
 #		echo $REPLY		
 #		echo -e "Modified to:"
-		nodeName=$(echo $REPLY | awk '{ print $1 }')
-		stringAppend="ansible_ssh_private_key_file=/home/ansible/.ssh/id_${nodeName}_rsa"
+		serverName=$(echo $REPLY | awk '{ print $1 }')
+		stringAppend="ansible_ssh_private_key_file=/home/ansible/.ssh/id_${serverName}_rsa"
 		echo "$REPLY    $stringAppend"
 	fi
 
